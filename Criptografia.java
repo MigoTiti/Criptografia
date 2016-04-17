@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Criptografia {
 
-    private static final int N = 8;
+    private static final int N = 10;
 
     public static void main(String[] args) {
         ArrayList<Integer> chavePrivada = new ArrayList<>();
@@ -24,22 +24,17 @@ public class Criptografia {
         ArrayList<Integer> chavePublica = gerarChavePublica(chavePrivada, q, r);
         ArrayList<Integer> codigosCrip = new ArrayList<>();
 
-        String mensagem = "teste";
+        String mensagem = "Todos os exercicios devem ser entregues ate a data limite estipulada atraves da pasta compartilhada individualmente com cada aluno no dropbox.\n" +
+                "Os exercicios podem valer proporcionalmente ate 2 pontos complementares ao 10 pontos totais por avaliacao. ";
         StringBuilder mensFinal = new StringBuilder();
 
         for (int i = 0; i < mensagem.length(); i++) {
-            if (mensagem.charAt(i) != ' ') {
-                int mensCrip = criptografar(String.valueOf(mensagem.charAt(i)), chavePublica);
-                codigosCrip.add(mensCrip);
-            } else
-                codigosCrip.add(0);
+            int mensCrip = criptografar(String.valueOf(mensagem.charAt(i)), chavePublica);
+            codigosCrip.add(mensCrip);
         }
 
         for (Integer aCodigosCrip : codigosCrip) {
-            if (aCodigosCrip != 0)
-                mensFinal.append(descriptografar(aCodigosCrip, r, q, chavePrivada));
-            else
-                mensFinal.append(" ");
+            mensFinal.append(descriptografar(aCodigosCrip, r, q, chavePrivada));
         }
 
         System.out.println(mensFinal.toString());
@@ -69,7 +64,7 @@ public class Criptografia {
         return charCrip;
     }
 
-    private static String descriptografar(int mensCrip, int r, int q, ArrayList<Integer> chavePrivada) {
+    private static char descriptografar(int charCrip, int r, int q, ArrayList<Integer> chavePrivada) {
         int r2 = 0;
         do {
             r2++;
@@ -80,7 +75,7 @@ public class Criptografia {
             chaveAux[i] = chavePrivada.get(i);
         }
 
-        int[] baldeAux = binPack(chaveAux, r2 * mensCrip % q);
+        int[] baldeAux = binPack(chaveAux, r2 * charCrip % q);
 
         String mensagemDec = "";
         for (int aBaldeAux : baldeAux) {
@@ -89,7 +84,7 @@ public class Criptografia {
 
         int charCodigo = Integer.parseInt(mensagemDec, 2);
 
-        return Character.toString((char) charCodigo);
+        return (char) charCodigo;
     }
 
     private static int[] binPack(int[] elementos, int limiteBalde) {
